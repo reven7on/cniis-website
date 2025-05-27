@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: cniis-website
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+    autoDeploy: true 
