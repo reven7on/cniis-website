@@ -13,31 +13,74 @@
         />
       </div>
     </router-link>
-    <nav class="navigation">
+    
+    <!-- Десктопная навигация -->
+    <nav class="navigation desktop-nav">
       <ul>
         <li v-for="item in menuItems" :key="item.id">
           <router-link
             :to="item.link"
-            custom
-            v-slot="{ href, navigate, isActive }"
+            exact-active-class="active"
           >
-            <a :href="href" @click="navigate" :class="{ active: isActive }">
-              {{ item.title }}
-            </a>
+            {{ item.title }}
           </router-link>
         </li>
       </ul>
     </nav>
+
     <div class="header-right">
       <div class="phone">
         <a href="tel:+74959999999">+7 (495) 999-99-99</a>
       </div>
+      
+      <!-- Кнопка бургер-меню -->
+      <button 
+        class="burger-btn" 
+        @click="toggleMobileMenu"
+        :class="{ active: isMobileMenuOpen }"
+        aria-label="Открыть меню"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
+
+    <!-- Мобильное меню -->
+    <div class="mobile-menu" :class="{ open: isMobileMenuOpen }">
+      <nav class="mobile-navigation">
+        <ul>
+          <li v-for="item in menuItems" :key="item.id">
+            <router-link
+              :to="item.link"
+              custom
+              v-slot="{ href, navigate, isExactActive }"
+            >
+              <a 
+                :href="href" 
+                @click="handleMobileNavClick(navigate)" 
+                :class="{ active: isExactActive }"
+              >
+                {{ item.title }}
+              </a>
+            </router-link>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Overlay для закрытия меню -->
+    <div 
+      class="mobile-menu-overlay" 
+      :class="{ visible: isMobileMenuOpen }"
+      @click="closeMobileMenu"
+    ></div>
   </header>
 </template>
 
 <script>
 import { gsap } from "gsap";
+
 export default {
   name: "TheHeader",
   data() {
@@ -50,40 +93,39 @@ export default {
         { id: 5, title: "Контакты", link: "/contact" },
       ],
       isScrolled: false,
+      isMobileMenuOpen: false,
     };
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener("resize", this.handleResize);
   },
   beforeUnmount() {
     window.removeEventListener("scroll", this.handleScroll);
+    window.removeEventListener("resize", this.handleResize);
   },
   methods: {
     handleScroll() {
       this.isScrolled = window.scrollY > 50;
     },
-    isActive(link) {
-      // First, check if this is a regular route link (without #)
-      if (!link.includes("#")) {
-        return this.$route.path === link;
+    handleResize() {
+      if (window.innerWidth > 768 && this.isMobileMenuOpen) {
+        this.closeMobileMenu();
       }
-
-      // If it's a hash link, we need to check both path and hash
-      const [path, hash] = link.includes("#") ? link.split("#") : [link, ""];
-
-      // If there's only a hash (e.g. "#services"), check if it matches current hash
-      if (path === "" && hash) {
-        return window.location.hash === `#${hash}`;
-      }
-
-      // Otherwise check both path and hash
-      return (
-        this.$route.path === path &&
-        (hash ? window.location.hash === `#${hash}` : true)
-      );
+    },
+    toggleMobileMenu() {
+      this.isMobileMenuOpen = !this.isMobileMenuOpen;
+      document.body.style.overflow = this.isMobileMenuOpen ? 'hidden' : '';
+    },
+    closeMobileMenu() {
+      this.isMobileMenuOpen = false;
+      document.body.style.overflow = '';
+    },
+    handleMobileNavClick(navigate) {
+      navigate();
+      this.closeMobileMenu();
     },
     animateLogo() {
-      // Использование GSAP для более сложной анимации согласно ТЗ
       gsap.to(this.$refs.logoImage, {
         rotation: 360,
         scale: 1.1,
@@ -198,10 +240,10 @@ export default {
 .header-right {
   display: flex;
   align-items: center;
+  gap: 1rem;
 }
 
 .phone {
-  margin-right: 1.5rem;
   position: relative;
   overflow: hidden;
 }
@@ -237,10 +279,129 @@ export default {
   transform: translateX(0);
 }
 
-/* Медиа-запросы для адаптивности */
+/* Burger Menu Styles */
+.burger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 25px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
+}
+
+.burger-btn span {
+  width: 100%;
+  height: 3px;
+  background-color: #2a4d80;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.burger-btn.active span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.burger-btn.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.burger-btn.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 280px;
+  height: 100vh;
+  background-color: #ffffff;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 999;
+  padding-top: 80px;
+}
+
+.mobile-menu.open {
+  right: 0;
+}
+
+.mobile-navigation ul {
+  flex-direction: column;
+  padding: 2rem 0;
+}
+
+.mobile-navigation li {
+  margin: 0;
+  border-bottom: 1px solid rgba(42, 77, 128, 0.1);
+}
+
+.mobile-navigation a {
+  display: block;
+  padding: 1.2rem 2rem;
+  font-size: 18px;
+  color: #2a4d80;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.mobile-navigation a:hover,
+.mobile-navigation a.active {
+  background-color: rgba(87, 144, 220, 0.1);
+  color: #5790dc;
+  font-weight: 600;
+}
+
+.mobile-navigation a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 100%;
+  background-color: #5790dc;
+  transition: width 0.3s ease;
+}
+
+.mobile-navigation a.active::after,
+.mobile-navigation a:hover::after {
+  width: 4px;
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 998;
+}
+
+.mobile-menu-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Медиа-запросы */
 @media (max-width: 1024px) {
   .header {
     padding: 1rem 2rem;
+  }
+  .header.scrolled {
+    padding: 0.7rem 2rem;
   }
   .navigation li {
     margin: 0 0.8rem;
@@ -253,39 +414,34 @@ export default {
 @media (max-width: 768px) {
   .header {
     padding: 0.8rem 1.5rem;
-    flex-wrap: wrap;
-    justify-content: space-between;
   }
-
-  .logo {
-    flex: 0 0 auto;
+  .header.scrolled {
+    padding: 0.6rem 1.5rem;
   }
 
   .logo img {
     max-height: 40px;
   }
 
-  .navigation {
-    display: none; /* На мобильных устройствах заменяется бургер-меню */
-    /* Будущее дополнение: бургер-меню */
+  .desktop-nav {
+    display: none;
   }
 
-  .header-right {
-    flex: 0 0 auto;
+  .burger-btn {
+    display: flex;
   }
 
   .phone a {
     font-size: 14px;
-  }
-
-  .phone {
-    margin-right: 0;
   }
 }
 
 @media (max-width: 480px) {
   .header {
     padding: 0.6rem 1rem;
+  }
+  .header.scrolled {
+    padding: 0.5rem 1rem;
   }
 
   .logo img {
@@ -294,6 +450,26 @@ export default {
 
   .phone a {
     font-size: 12px;
+  }
+
+  .mobile-menu {
+    width: 100%;
+    right: -100%;
+  }
+
+  .mobile-navigation a {
+    font-size: 16px;
+    padding: 1rem 1.5rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .phone {
+    display: none;
+  }
+  
+  .header-right {
+    gap: 0;
   }
 }
 

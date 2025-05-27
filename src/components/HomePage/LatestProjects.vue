@@ -296,26 +296,66 @@ export default {
    transform: scale(1.2);
 }
 
-
-/* Custom navigation arrows - Positioning Adjustment */
-.swiper-button-prev {
-
-  /* Swiper's default is usually left: 10px; */
-  left: -35px; /* Попробуйте это значение, увеличьте (-10px, -15px), если нужно отодвинуть дальше */
-  /* Убедитесь, что цвет и другие стили сохранены */
+/* Custom navigation arrows - ИСПРАВЛЕННОЕ ПОЗИЦИОНИРОВАНИЕ ДЛЯ МОБИЛОК */
+.swiper-button-prev,
+.swiper-button-next {
+  /* Базовые стили для всех размеров */
   color: #5790DC;
+  width: 35px;
+  height: 35px;
+  margin-top: -17.5px; /* Центрирование по вертикали */
+}
+
+/* Десктоп стили */
+.swiper-button-prev {
+  left: -35px;
 }
 
 .swiper-button-next {
-  /* Swiper's default is usually right: 10px; */
-  right: -5px; /* Используйте то же значение, что и для left, для симметрии */
-  /* Убедитесь, что цвет и другие стили сохранены */
-  color: #5790DC;
+  right: -35px;
+}
+
+/* МОБИЛЬНЫЕ СТИЛИ - ИСПРАВЛЕНИЕ СИММЕТРИИ */
+@media (max-width: 768px) {
+  .swiper-button-prev,
+  .swiper-button-next {
+    width: 30px;
+    height: 30px;
+    margin-top: -15px;
+    /* Одинаковое расстояние от краев на мобилке, но подальше друг от друга */
+  }
+  
+  .swiper-button-prev {
+    left: -10px; /* Отодвигаем левую стрелку левее */
+  }
+
+  .swiper-button-next {
+    right: -10px; /* Отодвигаем правую стрелку правее */
+  }
+}
+
+/* Еще более маленькие экраны */
+@media (max-width: 480px) {
+  .swiper-button-prev {
+    left: -5px; /* Чуть ближе для очень маленьких экранов */
+  }
+
+  .swiper-button-next {
+    right: -5px; /* Чуть ближе для очень маленьких экранов */
+  }
 }
 
 .swiper-button-next:after,
 .swiper-button-prev:after {
   font-size: 1.5rem; /* Adjust size as needed */
+}
+
+/* Уменьшаем размер стрелок на мобилках */
+@media (max-width: 768px) {
+  .swiper-button-next:after,
+  .swiper-button-prev:after {
+    font-size: 1.2rem;
+  }
 }
 
 .all-projects-btn {

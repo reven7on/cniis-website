@@ -265,30 +265,84 @@ p {
   background-color: #FF9800;
 }
 
-@media (max-width: 1200px) {
-  .direction-circle {
-    width: 280px;  /* Было 250px */
-    height: 280px; /* Было 250px */
+/* Промежуточные размеры для предотвращения выхода кругов за границы */
+@media (max-width: 1400px) {
+  .quadrant-1 {
+    left: 5%;
+  }
+  
+  .quadrant-2 {
+    right: 5%;
+  }
+  
+  .quadrant-3 {
+    right: 5%;
+  }
+  
+  .quadrant-4 {
+    left: 5%;
   }
 }
 
+@media (max-width: 1300px) {
+  .direction-circle {
+    width: 280px;
+    height: 280px;
+  }
+  
+  .quadrant-1 {
+    left: 2%;
+  }
+  
+  .quadrant-2 {
+    right: 2%;
+  }
+  
+  .quadrant-3 {
+    right: 2%;
+  }
+  
+  .quadrant-4 {
+    left: 2%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .direction-circle {
+    width: 260px;
+    height: 260px;
+  }
+  
+  .quadrant-1, .quadrant-2, .quadrant-3, .quadrant-4 {
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: auto;
+  }
+}
+
+/* Переход к сетке на планшетах */
 @media (max-width: 1024px) {
   .coordinate-system {
     height: auto;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
+    padding: 0 1rem;
   }
   
   .direction-circle {
     position: relative;
     width: 100%;
     height: auto;
+    min-height: 280px;
     aspect-ratio: 1;
-    top: auto;
-    left: auto;
-    right: auto;
-    bottom: auto;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    max-width: 300px;
+    margin: 0 auto;
   }
   
   .axis {
@@ -296,18 +350,68 @@ p {
   }
 }
 
+@media (max-width: 768px) {
+  .coordinate-system {
+    gap: 1.5rem;
+    padding: 0 0.5rem;
+  }
+  
+  .direction-circle {
+    min-height: 260px;
+    max-width: 280px;
+  }
+  
+  .activity-directions {
+    padding: 4rem 1rem;
+  }
+}
+
 @media (max-width: 640px) {
   .coordinate-system {
     grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .direction-circle {
+    max-width: 320px;
+    min-height: 300px;
   }
   
   .section-title {
     font-size: 24px;
     line-height: 30px;
+    margin-bottom: 3rem;
   }
   
   .activity-directions {
-    padding: 4rem 1.5rem;
+    padding: 3rem 1rem;
   }
 }
-</style>
+
+@media (max-width: 480px) {
+  .direction-circle {
+    max-width: 280px;
+    min-height: 280px;
+    padding: 1.5rem;
+  }
+  
+  .card-icon img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1rem;
+  }
+  
+  h3 {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  
+  p {
+    font-size: 13px;
+  }
+  
+  .more-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 13px;
+  }
+}</style>

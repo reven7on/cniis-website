@@ -26,32 +26,32 @@ export default {
       advantages: [
         {
           title: 'Опытная команда экспертов',
-          description: 'Наши специалисты имеют многолетний опыт работы в сфере информационных технологий и отраслевой экспертизы',
+          description: 'Многолетний опыт в IT и глубокая отраслевая экспертиза наших специалистов',
           icon: 'fas fa-users'
         },
         {
           title: 'Инновационные технологии',
-          description: 'Мы используем передовые технологии и современные подходы при разработке решений',
+          description: 'Передовые технологии и современные подходы в разработке решений',
           icon: 'fas fa-lightbulb'
         },
         {
           title: 'Научный подход',
-          description: 'Все наши решения основаны на научных исследованиях и проверенных методологиях',
+          description: 'Решения на основе научных исследований и проверенных методологий',
           icon: 'fas fa-flask'
         },
         {
           title: 'Отраслевая экспертиза',
-          description: 'Глубокое понимание бизнес-процессов и специфики различных отраслей',
+          description: 'Глубокое понимание бизнес-процессов различных отраслей',
           icon: 'fas fa-industry'
         },
         {
           title: 'Надежность решений',
-          description: 'Высоконадежные решения, проверенные в реальных условиях эксплуатации',
+          description: 'Высоконадежные системы, проверенные в реальных условиях',
           icon: 'fas fa-shield-alt'
         },
         {
-          title: 'Сопровождение после внедрения',
-          description: 'Мы обеспечиваем полную поддержку и развитие систем после их внедрения',
+          title: 'Полное сопровождение',
+          description: 'Поддержка и развитие систем на всех этапах жизненного цикла',
           icon: 'fas fa-headset'
         }
       ]
@@ -62,7 +62,7 @@ export default {
 
 <style scoped>
 .advantages {
-  padding: 5rem 2rem;
+  padding: 3rem 1rem;
   background-color: var(--background-color, #f8f9fa);
 }
 
@@ -78,7 +78,8 @@ export default {
   position: relative;
   margin-bottom: 3rem;
   color: var(--text-color, #333);
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  padding: 0 1rem;
 }
 
 .animated-heading::after {
@@ -99,19 +100,20 @@ export default {
 
 /* Сетка гексагональных блоков */
 .advantages-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
   margin-top: 2rem;
+  justify-items: center;
 }
 
 /* Стили для гексагональных карточек */
 .hex-card {
   position: relative;
-  width: 300px;
-  height: 260px;
-  margin: 30px 15px;
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 1.15;
+  margin: 1rem 0;
 }
 
 .hex-content {
@@ -126,71 +128,119 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 30px;
+  padding: clamp(1.5rem, 4vw, 2rem);
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
 }
 
 .hex-card:hover .hex-content {
-  transform: translateY(-10px);
+  transform: translateY(-5px);
   box-shadow: 0 15px 30px rgba(0,0,0,0.2);
 }
 
 .hex-icon {
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 3vw, 2.2rem);
   color: var(--primary-color, #0077cc);
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem;
+  flex-shrink: 0;
 }
 
 .hex-content h3 {
-  font-size: 1.2rem;
+  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
   margin-bottom: 0.5rem;
   color: var(--heading-color, #222);
+  text-align: center;
+  line-height: 1.3;
+  font-weight: 600;
 }
 
 .hex-content p {
-  font-size: 0.9rem;
+  font-size: clamp(0.7rem, 1.8vw, 0.8rem);
   text-align: center;
   color: var(--text-light, #666);
+  line-height: 1.3;
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  hyphens: auto;
+  word-break: break-word;
 }
 
-/* Медиа-запросы для адаптивности */
+/* Медиа-запросы для мобильных устройств */
 @media (max-width: 768px) {
+  .advantages {
+    padding: 2rem 0.5rem;
+  }
+  
+  .advantages-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+  
   .hex-card {
-    width: 260px;
-    height: 230px;
+    max-width: 280px;
   }
   
   .hex-content {
-    padding: 20px;
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+  }
+
+  .animated-heading {
+    margin-bottom: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .advantages {
+    padding: 1.5rem 0.5rem;
   }
   
-  .hex-icon {
-    font-size: 2rem;
+  .advantages-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .hex-card {
+    max-width: 250px;
+    margin: 0.5rem 0;
+  }
+  
+  .hex-content {
+    padding: 1rem;
   }
   
   .hex-content h3 {
-    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
   }
   
   .hex-content p {
-    font-size: 0.8rem;
+    -webkit-line-clamp: 3;
   }
 }
 
-@media (max-width: 576px) {
-  .advantages-grid {
-    gap: 15px;
-  }
-  
+/* Дополнительные стили для очень маленьких экранов */
+@media (max-width: 360px) {
   .hex-card {
-    width: 230px;
-    height: 200px;
-    margin: 20px 10px;
+    max-width: 220px;
   }
   
   .hex-content {
-    padding: 15px;
+    padding: 0.8rem;
+  }
+  
+  .hex-icon {
+    margin-bottom: 0.5rem;
   }
 }
-</style>
+
+/* Стили для больших экранов */
+@media (min-width: 1200px) {
+  .advantages-grid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1000px;
+    margin: 2rem auto 0;
+  }
+}</style>
